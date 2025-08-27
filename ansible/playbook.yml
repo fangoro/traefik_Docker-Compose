@@ -1,0 +1,83 @@
+---
+- name: Setup Traefik VM on Debian
+  hosts: traefik
+  become: true
+  vars:
+    docker_compose_version: "2.17.2"
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - git
+          - python3-pip
+        state: present
+
+    - name: Add Docker GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
+        state: present
+
+    - name: Update apt cache after adding Docker repo
+      apt:
+        update_cache: yes
+
+    - name: Install Docker packages
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+    - name: Enable and start Docker
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Add user traefikadmin to docker group
+      user:
+        name: traefikadmin
+        groups: docker
+        append: yes
+
+    - name: Create Traefik directory
+      file:
+        path: /home/traefikadmin/traefik
+        state: directory
+        owner: traefikadmin
+        group: traefikadmin
+        mode: '0755'
+
+    - name: Copy traefik.yml
+      copy:
+        src: files/traefik.yml
+        dest: /home/traefikadmin/traefik/traefik.yml
+        owner: traefikadmin
+        group: traefikadmin
+        mode: '0644'
+
+    - name: Copy docker-compose.yml
+      copy:
+        src: files/docker-compose.yml
+        dest: /home/traefikadmin/traefik/docker-compose.yml
+        owner: traefikadmin
+        group: traefikadmin
+        mode: '0644'

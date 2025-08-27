@@ -1,0 +1,25 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false
+
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  level: DEBUG       # set log level to debug
+  format: common     # optional: common, json, or short
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: traefik@gmail.com       # Replace with your email
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web

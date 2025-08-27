@@ -1,0 +1,23 @@
+variable "resource_group_location" {
+  type        = string
+  default     = "East US"
+  description = "Location of the resource group."
+}
+
+variable "resource_group_name_prefix" {
+  type        = string
+  default     = "rg"
+  description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
+}
+
+variable "vm_size" {
+  type        = string
+  default     = "Standard_B1s"
+  description = "Size of the virtual machine."
+}
+
+variable "admin_username" {
+  type        = string
+  default     = "adminuser"
+  description = "Admin username for the virtual machine."
+}

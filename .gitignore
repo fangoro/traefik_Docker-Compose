@@ -1,0 +1,105 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.terraform/
+.terraform.lock.hcl
+terraform.tfplan
+terraform.tfplan.*
+plan
+plan.*
+*.backup
+
+# Terraform crash log files
+crash.log
+crash.*.log
+
+# Terraform override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ansible files
+*.retry
+.vault_pass
+vault_password_file
+*.log
+
+# SSH keys
+*.pem
+*.key
+id_rsa*
+*.pub
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Cloud provider specific
+# AWS
+.aws/
+aws-credentials
+
+# Azure
+.azure/
+azure-credentials
+
+# GCP
+.gcp/
+gcp-credentials
+*.json
+!terraform/*/providers.tf
+!terraform/*/variables.tf
+!terraform/*/outputs.tf
+!terraform/*/main.tf
+!ansible/files/*.yml
+!ansible/*.yml
+!ansible/*.ini
+
+# Docker
+.dockerignore
+
+# Local development
+local/
+dev/
+test-output/

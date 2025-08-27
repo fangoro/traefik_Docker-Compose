@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  traefik:
+    image: traefik:3.5.0
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=traefik@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./letsencrypt:/letsencrypt"
+
+  cats:
+    image: mikesir87/cats:3.0
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+
+# Define the service port (assuming the app runs on port 5000 inside container)
+      - "traefik.http.services.cats.loadbalancer.server.port=5000"
+      
+# HTTP router → redirect to HTTPS
+      - "traefik.http.routers.cats-http.entrypoints=web"
+      - "traefik.http.routers.cats-http.rule=Host(`YOUR-PUBLIC-IP-HERE`)"
+
+##########################################################
+#YOU CAN COMMENT THIS WHOLE BLOCK IF YOU DON'T WANT HTTPS#
+##########################################################
+
+      #- "traefik.http.routers.cats-http.middlewares=redirect-to-https"
+      
+# HTTPS router → serve site
+      #- "traefik.http.routers.cats-https.entrypoints=websecure"
+      #- "traefik.http.routers.cats-https.rule=Host(`YOUR-PUBLIC-IP-HERE`)"
+      #- "traefik.http.routers.cats-https.tls.certresolver=myresolver"
+      
+# Middleware definition
+      #- "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
